@@ -127,12 +127,54 @@
             description: "Search the world's information, including webpages, images, videos, and more."
         },
         { 
+            title: "Github", 
+            url: "https://www.github.com", 
+            description: "GitHub is a web-based platform for version control and collaborative software development, using Git. It enables developers to host, review, and share code, manage projects, and build software collaboratively with a global community."
+        },
+        // Additional websites here...
+        { 
+            title: "Wikipedia", 
+            url: "https://www.wikipedia.com", 
+            description: "Wikipedia is a free, multilingual online encyclopedia created and edited by volunteers worldwide. It operates on an open collaboration model and is hosted by the Wikimedia Foundation. Wikipedia offers articles on a vast array of topics, maintained with a commitment to neutrality and reliability."
+        },
+        { 
+            title: "Tik Tok", 
+            url: "https://www.tiktok.com/", 
+            description: " A platform for creating, sharing, and discovering short videos, TikTok remains a global phenomenon."
+        },
+        { 
+            title: "Instagram", 
+            url: "https://www.instagram.com/", 
+            description: "A social media app for photo and video sharing with features like Stories and Reels, Instagram continues to dominate in user engagement."
+        },
+        { 
+            title: "OpenAI chatGPT", 
+            url: "https://www.openai.com/chatgpt", 
+            description: "An AI-powered chatbot for generating natural language responses, aiding communication, and providing creative solutions."
+        },
+        { 
+            title: "Spotify", 
+            url: "https://www.spotify.com/", 
+            description: "A music streaming service offering millions of songs, curated playlists, and personalized recommendations. Spotify is widely loved for its seamless music and podcast experience. "
+        },
+        { 
+            title: "Telegram", 
+            url: "https://telegram.org/", 
+            description: "A secure messaging app with robust privacy settings, supporting large groups and media sharing."
+        },
+        { 
+            title: "DisneyPlus", 
+            url: "https://www.disneyplus.com/", 
+            description: "A streaming service with exclusive Disney, Pixar, Marvel, and Star Wars content."
+        },
+        { 
             title: "YouTube", 
             url: "https://www.youtube.com", 
             description: "Enjoy videos and music you love, upload original content, and share it with the world."
         }
     ];
 
+   
     function performSearch() {
         const query = document.getElementById("searchInput").value.toLowerCase().trim();
         resultsContainer.innerHTML = '';
@@ -182,12 +224,15 @@
     }
 
     function toggleTheme() {
-        document.body.classList.toggle("dark-mode");
-        themeToggle.classList.toggle("bi-moon");
-        themeToggle.classList.toggle("bi-sun");
+        const darkModeEnabled = document.body.classList.toggle("dark-mode");
+        themeToggle.classList.toggle("bi-moon", !darkModeEnabled);
+        themeToggle.classList.toggle("bi-sun", darkModeEnabled);
+        localStorage.setItem("darkMode", darkModeEnabled);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
+        const darkMode = localStorage.getItem("darkMode") === "true";
+        if (darkMode) toggleTheme();
         document.getElementById("profileName").value = localStorage.getItem("profileName") || '';
         document.getElementById("profileProfession").value = localStorage.getItem("profileProfession") || '';
     });
