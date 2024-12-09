@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SELA Search Engine</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-color, #f8f9fa);
+            color: var(--text-color, #000);
+            transition: all 0.3s ease;
+        }
+        .dark-mode {
+            --bg-color: #121212;
+            --text-color: #ffffff;
+        }
+        .top-right-icons {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        .icon-btn {
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-color, #000);
+        }
+        .sela-logo {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .search-container {
+            margin-top: 20px;
+        }
+        .search-bar {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .section {
+            display: none;
+            padding: 20px;
+            text-align: center;
+        }
+        .section.active {
+            display: block;
+        }
+        .back-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-color, #000);
+        }
+        .profile-input {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Logo -->
+<div class="sela-logo">
+    <h1 class="text-4xl font-bold" style="color: #4285F4;">S<span style="color: #EA4335;">E</span><span style="color: #FBBC05;">L</span><span style="color: #34A853;">A</span></h1>
+</div>
+
+<!-- Top-Right Icons -->
+<div class="top-right-icons">
+    <i class="icon-btn bi bi-person-circle" onclick="showSection('profile')"></i>
+    <i class="icon-btn bi bi-gear" onclick="showSection('settings')"></i>
+    <i class="icon-btn bi bi-moon" id="themeToggle" onclick="toggleTheme()"></i>
+</div>
+
+<!-- Main Search Container -->
+<div id="mainSection" class="container text-center search-container">
+    <div class="search-bar">
+        <input id="searchInput" type="text" 
+            placeholder="Search for anything (content, keywords, or URLs)" 
+            class="form-control px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <button onclick="performSearch()" 
+            class="btn btn-primary mt-4 px-5 py-2">Search</button>
+    </div>
+</div>
+
+<!-- Results Section -->
+<div class="container mt-5" id="results">
+    <!-- Dynamic search results will appear here -->
+</div>
+
+<!-- Profile Section -->
+<div id="profileSection" class="section">
+    <i class="back-btn bi bi-arrow-left" onclick="showSection('main')"></i>
+    <h2 class="text-3xl mb-4">Profile</h2>
+    <div class="profile-input">
+        <input id="profileName" type="text" class="form-control mb-3" placeholder="Your Name">
+        <input id="profileProfession" type="text" class="form-control mb-3" placeholder="Your Profession">
+        <button class="btn btn-success" onclick="saveProfile()">Save</button>
+    </div>
+</div>
+
+<!-- Settings Section -->
+<div id="settingsSection" class="section">
+    <i class="back-btn bi bi-arrow-left" onclick="showSection('main')"></i>
+    <h2 class="text-3xl mb-4">Settings</h2>
+    <p>Basic settings can be added here.</p>
+</div>
+
+<!-- JavaScript -->
+<script>
+    const resultsContainer = document.getElementById("results");
+    const mainSection = document.getElementById("mainSection");
+    const profileSection = document.getElementById("profileSection");
+    const settingsSection = document.getElementById("settingsSection");
+    const themeToggle = document.getElementById("themeToggle");
+
+    const websites = [
+        { 
+            title: "Google", 
+            url: "https://www.google.com", 
+            description: "Search the world's information, including webpages, images, videos, and more."
+        },
+        { 
+            title: "YouTube", 
+            url: "https://www.youtube.com", 
+            description: "Enjoy videos and music you love, upload original content, and share it with the world."
+        }
+    ];
+
+    function performSearch() {
+        const query = document.getElementById("searchInput").value.toLowerCase().trim();
+        resultsContainer.innerHTML = '';
+        if (query === '') {
+            resultsContainer.innerHTML = '<p class="text-center text-gray-600">Please enter a search query.</p>';
+            return;
+        }
+
+        const matches = websites.filter(site => 
+            site.title.toLowerCase().includes(query) ||
+            site.description.toLowerCase().includes(query)
+        );
+
+        if (matches.length > 0) {
+            matches.forEach(site => {
+                const resultCard = `
+                    <div class="bg-white shadow p-4 rounded-lg mb-4">
+                        <h2 class="text-xl font-bold text-blue-500 hover:underline">
+                            <a href="${site.url}" target="_blank">${site.title}</a>
+                        </h2>
+                        <p>${site.description}</p>
+                    </div>
+                `;
+                resultsContainer.innerHTML += resultCard;
+            });
+        } else {
+            resultsContainer.innerHTML = '<p class="text-center text-gray-600">No results found.</p>';
+        }
+    }
+
+    function showSection(section) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        if (section === 'main') mainSection.style.display = 'block';
+        else {
+            mainSection.style.display = 'none';
+            if (section === 'profile') profileSection.classList.add('active');
+            else if (section === 'settings') settingsSection.classList.add('active');
+        }
+    }
+
+    function saveProfile() {
+        const name = document.getElementById("profileName").value;
+        const profession = document.getElementById("profileProfession").value;
+        localStorage.setItem("profileName", name);
+        localStorage.setItem("profileProfession", profession);
+        alert("Profile saved!");
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle("dark-mode");
+        themeToggle.classList.toggle("bi-moon");
+        themeToggle.classList.toggle("bi-sun");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("profileName").value = localStorage.getItem("profileName") || '';
+        document.getElementById("profileProfession").value = localStorage.getItem("profileProfession") || '';
+    });
+</script>
+
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
